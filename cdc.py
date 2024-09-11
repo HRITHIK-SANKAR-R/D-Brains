@@ -2,20 +2,26 @@ import smartpy as sp
 
 class AssuredContractedFarming(sp.Contract):
     def __init__(self):
-        self.init(
-            farmers = sp.map(tkey=sp.TAddress, tvalue=sp.TRecord(name=sp.TString, balance=sp.TMutez)),
-            buyers = sp.map(tkey=sp.TAddress, tvalue=sp.TRecord(name=sp.TString, balance=sp.TMutez)),
-            contracts = sp.big_map(tkey=sp.TNat, tvalue=sp.TRecord(
-                farmer=sp.TAddress,
-                buyer=sp.TAddress,
-                goods=sp.TString,
-                price=sp.TMutez,
-                delivered=sp.TBool,
-                paid=sp.TBool,
-                disputed=sp.TBool
-            )),
-            contract_counter = 0
-        )
+        self.init_farmers()
+        self.init_buyers()
+        self.init_contracts()
+
+    def init_farmers(self):
+        self.farmers = sp.map(tkey=sp.TAddress, tvalue=sp.TRecord(name=sp.TString, balance=sp.TMutez))
+
+    def init_buyers(self):
+        self.buyers = sp.map(tkey=sp.TAddress, tvalue=sp.TRecord(name=sp.TString, balance=sp.TMutez))
+
+    def init_contracts(self):
+        self.contracts = sp.big_map(tkey=sp.TNat, tvalue=sp.TRecord(
+            farmer=sp.TAddress,
+            buyer=sp.TAddress,
+            goods=sp.TString,
+            price=sp.TMutez,
+            delivered=sp.TBool,
+            paid=sp.TBool,
+            disputed=sp.TBool
+        ))
 
     @sp.entry_point
     def register_farmer(self, params):
