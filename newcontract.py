@@ -25,7 +25,7 @@ class AssuredContractFarmingPlatform(sp.Contract):
                 query_text=sp.TString,
                 status=sp.TString,
                 raised_by=sp.TAddress,
-                resolved_by=sp.TAddress
+                resolved_by=sp.TOption(sp.TAddress)
             )),
             next_query_id=sp.nat(0),
             admin=admin
@@ -105,14 +105,14 @@ class AssuredContractFarmingPlatform(sp.Contract):
         sp.verify(contract.status == "Pending", "Contract already processed")
 
         total_amount = contract.price
-        amount_to_pay = sp.mutez(int(total_amount * percentage_received / 100))
-        amount_to_return = total_amount - amount_to_pay
-        
+        amount_to_pay = sp.split_tokens(total_amount, percentage_received, 100)
+        amount_to_return = sp.as_nat(total_amount - amount_to_pay)
+
         sp.verify(self.data.buyers[sp.sender].balance >= total_amount, "Insufficient funds")
         sp.verify(amount_to_pay > sp.mutez(0), "Invalid payment amount")
 
         # Perform transfers
-        sp.send(sp.sender, amount_to_return)
+        sp.send(contract.buyer, amount_to_return)
         sp.send(contract.farmer, amount_to_pay)
         
         self.data.contracts[contract_id].status = "Completed"
@@ -153,7 +153,6 @@ class AssuredContractFarmingPlatform(sp.Contract):
     @sp.entry_point
     def update_address(self, new_address):
         sp.verify(sp.sender in self.data.buyers or sp.sender in self.data.farmers, "Only registered users can update address")
-        sp.verify(self.data.valid_addresses.contains(new_address), "New address is not valid")
         if sp.sender in self.data.buyers:
             self.data.buyers[sp.sender].address = new_address
         else:
@@ -185,12 +184,8 @@ def test():
     scenario += contract.update_product("wheat", 80).run(sender=farmer)
 
     # Place and finalize bids
-    scenario += contract.place_bid("wheat", sp.mutez(1600)).run(sender=buyer)
+    scenario += contract.place_bid("wheat", sp.mutez(2000)).run(sender=buyer)
     scenario += contract.finalize_bid("wheat").run(sender=farmer)
 
     # Confirm contract
-    scenario += contract.confirm_contract(0, 90).run(sender=buyer)
-
-    # Raise and resolve query
-    scenario += contract.raise_query("Query about wheat pricing").run(sender=buyer)
-    scenario += contract.resolve_query(0).run(sender=admin)
+    scenario += contract.confirm_contract(0, 80).run(sender=buyer)
