@@ -3,8 +3,8 @@ import smartpy as sp
 class Assuredcontract(sp.Contract):
     def __init__(self):
         self.init(
-            fadrs=sp.TAddress("tz1PguFJTj2ZPT9fCqAxt4BwbJtDP8XNAfJS"),
-            cuadrs=sp.TAddress("tz1Wo5j2PHYarqekwd7FimrZgS2Ps7oB2war"),
+            fadrs=sp.address("tz1PguFJTj2ZPT9fCqAxt4BwbJtDP8XNAfJS"),
+            cuadrs=sp.address("tz1Wo5j2PHYarqekwd7FimrZgS2Ps7oB2war"),
             goods=sp.map({
                 "rice":500,
                 "wheat":400,
@@ -22,6 +22,7 @@ class Assuredcontract(sp.Contract):
         price=0
         for i in byls:
             price+=self.data.goods[i]
+        self.data.price = price
         self.deliver(price)
     @sp.entry_point
     def sendm(self,price,byls):
@@ -32,11 +33,12 @@ class Assuredcontract(sp.Contract):
         if(pr>0):
             self.sendm(self.data.price,self.data.fadrs)
             price=0
+            self.data.price = 0 
         else:
             sp.error("Not enough money")
     @sp.entry_point
     def confrim_payment(self):
-        cn=True
+        sp.data.cn=True
 
 @sp.add_test(name="Assured Contract")
 def test():
@@ -47,6 +49,7 @@ def test():
     con.confrim_payment()
     con.buy(["rice","wheat"])
 
+   
 
 
 
