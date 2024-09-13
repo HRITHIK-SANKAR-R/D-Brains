@@ -31,6 +31,7 @@ class Assuredcontract(sp.Contract):
     @sp.entry_point
     def deliver(self,pr):
         if(pr>0):
+            self.confrim_payment()
             self.sendm(self.data.price,self.data.fadrs)
             price=0
             self.data.price = 0 
@@ -46,7 +47,6 @@ def test():
     con=Assuredcontract()
     senario+=con
 
-    con.confrim_payment()
     con.buy(["rice","wheat"])
 
    
@@ -55,5 +55,6 @@ def test():
 
 
     
+
 
 

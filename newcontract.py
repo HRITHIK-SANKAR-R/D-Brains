@@ -79,7 +79,7 @@ class AssuredContractFarmingPlatform(sp.Contract):
         highest_bid = sp.local("highest_bid", sp.mutez(0))
 
         for bidder, bid_info in product.bids.items():
-            sp.if bid_info.bid > highest_bid.value:
+            if bid_info.bid > highest_bid.value:
                 highest_bid.value = bid_info.bid
                 highest_bidder.value = sp.some(bidder)
 
