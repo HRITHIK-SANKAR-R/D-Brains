@@ -1,6 +1,6 @@
-# Assured Contracted Farming
+# Assured Contract Farming
 
-**Assured Contracted Farming** is a decentralized platform leveraging blockchain technology to enable direct trade between farmers and retailers/wholesalers without intermediaries. The platform uses smart contracts to automate payments, escrow, and delivery confirmation, providing transparency and fairness in the agricultural supply chain.
+**Assured Contract Farming** is a decentralized platform leveraging blockchain technology to enable direct trade between farmers and retailers/wholesalers without intermediaries. The platform uses smart contracts to automate payments, escrow, and delivery confirmation, providing transparency and fairness in the agricultural supply chain.
 
 ## Features
 
@@ -28,8 +28,8 @@
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/HRITHIK-SANKAR-R/assured-contracted-farming.git
-   cd assured-contracted-farming
+   git clone https://github.com/HRITHIK-SANKAR-R/assured-Contract-farming.git
+   cd assured-Contract-farming
    ```
 
 2. Install dependencies:
